@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"no test for the moment\" && exit 0",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
-    "start": "npm run build && node dist/index.js"
+    "start_to_improve": "npm run build && node dist/index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
