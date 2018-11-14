@@ -8,7 +8,12 @@ const CatalogModel = require('./models/catalog.js')
 const ArticlePublicationModel = require('./models/articlePublication.js')
 
 // initialize
-const sequelize = new Sequelize('learnzone_dev', 'padawan', 'padawan', {
+const DB_URL = process.env.DATABASE_URL
+    ? process.env.DATABASE_URL
+    : process.env.DATABASE_DEV_URL
+        ? process.env.DATABASE_DEV_URL
+        : 'invalid URL';
+const sequelize = new Sequelize(DB_URL, {
     host: 'localhost',
     dialect: 'postgres',
 
@@ -35,8 +40,8 @@ Article.hasOne(User)
 Catalog.hasOne(User)
 Article.hasMany(ArticlePublication)
 Catalog.hasMany(ArticlePublication)
-Article.belongsToMany(Catalog, {through: 'ArticlePublication'})
-Catalog.belongsToMany(Article, {through: 'ArticlePublication'})
+Article.belongsToMany(Catalog, { through: 'ArticlePublication' })
+Catalog.belongsToMany(Article, { through: 'ArticlePublication' })
 
 // Sync DB
 // sequelize.sync()
