@@ -1,0 +1,23 @@
+{
+    "development": {
+        "username": "padawan",
+        "password": "padawan",
+        "database": "learn_nodejs_dev",
+        "host": "127.0.0.1",
+        "dialect": "postgresql"
+    },
+    "test": {
+        "username": "padawan",
+        "password": "padawan",
+        "database": "learn_nodejs_test",
+        "host": "127.0.0.1",
+        "dialect": "postgresql"
+    },
+    "production": {
+        "username": "root",
+        "password": null,
+        "database": "database_production",
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    }
+}
