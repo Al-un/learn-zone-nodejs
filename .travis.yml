@@ -1,0 +1,11 @@
+language:
+  node_js
+node_js:
+  - "11.1.0"  # Developping under this version
+  - "node"    # latest stable Node.js release
+cache:
+  directories:
+    - "node_modules"
+
+script:
+  - npm test
