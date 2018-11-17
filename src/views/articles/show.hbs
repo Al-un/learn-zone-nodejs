@@ -1,10 +1,13 @@
 <div>
     <div>
-        <p>ID: {{entity.id}}</p>
-        <p>Name: {{entity.name}}</p>
-        <p>Desc: {{entity.description}}</p>
-        <p>Publications: {{ entity.article_publications.length}}</p>
+        <p>ID: {{data.id}}</p>
+        <p>Name: {{data.name}}</p>
+        <p>Desc: {{data.description}}</p>
+        <p>Publications: {{ data.article_publications.length}}</p>
     </div>
+
+    <hr />
+
     <div>
         <table>
             <tr>
@@ -13,7 +16,7 @@
                 <th>Article</th>
                 <th>Delete</th>
             </tr>
-            {{#each entity.article_publications}}
+            {{#each data.article_publications}}
             <div>
                 <tr>
                     <td>{{this.id}}</td>
@@ -21,7 +24,7 @@
                     <td>{{this.article_id}}</td>
                     <td>
                         <form action="/article_publications/{{this.id}}?_method=DELETE" method="POST">
-                            <input type="hidden" name="source" value="articles/{{../entity.id}}" />
+                            <input type="hidden" name="source" value="articles/{{../data.id}}" />
                             <button type="Submit" class="delete-button">Delete</button>
                         </form>
                     </td>
@@ -29,4 +32,20 @@
             </div>
             {{/each}}
         </table>
+
+
     </div>
+
+    <hr />
+
+    <div>
+        <h4>Add catalogs</h4>
+
+        <form method='POST' action='/article_publications'>
+            <input type="hidden" name="source" value="articles/{{data.id}}" />
+            <input type="hidden" name="article_id" value="{{data.id}}" />
+            <input type="text" name="catalog_id" placeholder="Enter the catalog ID to add to this article" required=true />
+            <input type="submit" value="Add" />
+        </form>
+    </div>
+</div>

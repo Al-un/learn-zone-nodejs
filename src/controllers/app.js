@@ -1,3 +1,5 @@
+const { Sequelize } = require('sequelize');
+
 /**
  * Most basic version of a controller related to a given entity
  * 
@@ -34,13 +36,14 @@ class AppController {
         this._model = model;
         this._route = route_root;
         this.list = this.list.bind(this);
-        this.parse_new_or_show = this.parse_new_or_show.bind(this);
+        this.dispatch_id = this.dispatch_id.bind(this);
         this.show = this.show.bind(this);
         this.new = this.new.bind(this);
         this.create = this.create.bind(this);
         this.edit = this.edit.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
+        this.search = this.search.bind(this);
     }
 
     /**
@@ -50,10 +53,11 @@ class AppController {
      * @param {function} next next middleware function
      */
     list(req, res, next) {
-        this._model.findAll()
+        this._model
+            .findAll(this.getEntitiesListFetchOptions())
             .then(entities => {
                 res.locals.render = this._route + view_list;
-                res.locals.data = { list: entities };
+                res.locals.data = entities;
                 res.locals.status = 200;
                 return next();
             })
@@ -70,10 +74,10 @@ class AppController {
         var id = req.params.id;
         console.log(`Showing entity for PK ${id}`);
         this._model
-            .findByPk(id, { include: [{ model: ArticlePublication }] })
+            .findByPk(id, this.getSingleEntityFetchOptions())
             .then(entity => {
                 res.locals.render = this._route + view_show;
-                res.locals.data = { entity: entity };
+                res.locals.data = entity;
                 res.locals.status = 200;
                 return next();
             })
@@ -81,16 +85,24 @@ class AppController {
     }
 
     /**
-     * When filtering `/:id` path, return `new` function when id is `new`
-     * otherwise use `show`
+     * When filtering `/:id` path, handle specific case:
+     * - "new" prepare for a creation of a new entity
+     * - "search" returns a list of queried entities
+     * - remaining values are assumed to be an ID
+     * 
      * @param {http.IncomingMessage} req incoming request
      * @param {http.ServerResponse} res output response 
      * @param {function} next next middleware function
      */
-    parse_new_or_show(req, res, next) {
-        return 'new' === req.params.id
-            ? this.new(req, res, next)
-            : this.show(req, res, next);
+    dispatch_id(req, res, next) {
+        switch (req.params.id) {
+            case "new":
+                return this.new(req, res, next);
+            case "search":
+                return this.search(req, res, next);
+            default:
+                this.show(req, res, next);
+        }
     }
 
     /**
@@ -116,7 +128,7 @@ class AppController {
         this._model
             .create(req.body)
             .then(entity => {
-                res.locals.redirect = this._route + '/' + entity.id;
+                res.locals.redirect = req.body.source || this._route + '/' + entity.id;
                 res.locals.data = entity;
                 res.locals.status = 201;
                 return next();
@@ -133,10 +145,10 @@ class AppController {
     edit(req, res, next) {
         var id = req.params.id;
         this._model
-            .findByPk(id)
+            .findByPk(id, this.getSingleEntityFetchOptions())
             .then(entity => {
                 res.locals.render = this._route + view_edit;
-                res.locals.data = { entity: entity };
+                res.locals.data = entity;
                 res.locals.status = 200;
                 return next();
             })
@@ -178,7 +190,7 @@ class AppController {
             })
             // Status: 1 = success, 0 = error
             .then(deletionStatus => {
-                res.locals.redirect = this._route;
+                res.locals.redirect = req.body.source || this._route;
                 if (deletionStatus === 1) {
                     res.locals.status = 200;
                     res.locals.message = 'Deleted';
@@ -191,6 +203,57 @@ class AppController {
             })
     }
 
+    /**
+     * Search function. Can be rationalized in the abstract class as Sequelize
+     * allows sets as parameter: we simple pass the req.body as parameters.
+     * @param {http.IncomingMessage} req incoming request
+     * @param {http.ServerResponse} res output response 
+     * @param {function} next next middleware function
+     */
+    search(req, res, next) {
+        var search_options = this.formatSearchOptions(req.query);
+        console.log(`Searching with query parameters: ${JSON.stringify(search_options)}`);
+        this._model
+            .findAll(search_options)
+            .then(entities => {
+                res.locals.data = entities;
+                res.locals.status = 200;
+                return next();
+            })
+            .catch(error => res.status(400).send(error));
+    }
+
+    // ---------- Support methods ----------------------------------------------
+
+    /**
+     * Convert search input into appropriate search parameters for WHERE clause.
+     * Search parameters are merged with .getEntitiesListFetchOptions to add
+     * additional fields if required
+     * 
+     * @param {Object} query_parameters 
+     * @return {Object} formatted options
+     * @see .getEntitiesListFetchOptions
+     */
+    formatSearchOptions(query_parameters) {
+        return query_parameters;
+    }
+
+    /**
+     * @return {Object} options to pass when fetching a single entity
+     */
+    getSingleEntityFetchOptions() {
+        return {};
+    }
+
+    /**
+     * @return {Object} options to pass when fetching multiple entities
+     */
+    getEntitiesListFetchOptions() {
+        return {};
+    }
 }
 
-module.exports = AppController;
+module.exports = {
+    AppController,
+    Sequelize
+};

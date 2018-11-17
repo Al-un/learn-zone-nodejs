@@ -4,7 +4,7 @@ const { UserController } = require('../controllers/user');
 var controller = new UserController();
 
 router.get('/', controller.list)
-router.get('/:id', controller.parse_new_or_show);
+router.get('/:id', controller.dispatch_id);
 router.get('/:id/edit', controller.edit);
 router.post('/', controller.create)
 router.put('/:id', controller.update)
