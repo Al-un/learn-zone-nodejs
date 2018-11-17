@@ -8,14 +8,18 @@ if (process.env.NODE_ENV !== 'production') {
 const PORT = process.env.PORT || 3000;
 
 // Express
-const express = require('express')
-const bodyParser = require('body-parser')
-const app = express()
-app.use(bodyParser.json())
+const app =  require('./src/express');
+
+// Auth0 authentication
+const auth0_auth_config = require('./src/auth');
+auth0_auth_config(app);
 
 // Routing
 const routes = require('./src/routes')
 app.use('/', routes)
+// Responder
+const responder = require('./src/middleware/responder.js');
+app.use('/', responder);
 
 // Run
 app.listen(PORT, () => {

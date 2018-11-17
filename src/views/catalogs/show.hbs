@@ -1,0 +1,34 @@
+<div>
+    <div>
+        <p>ID: {{entity.id}}</p>
+        <p>Code: {{entity.code}}</p>
+        <p>Name: {{entity.name}}</p>
+        <p>Desc: {{entity.description}}</p>
+        <p>Publications: {{entity.article_publications.length}}</p>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Catalog</th>
+                <th>Article</th>
+                <th>Delete</th>
+            </tr>
+            {{#each entity.article_publications}}
+            <div>
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.catalog_id}}</td>
+                    <td>{{this.article_id}}</td>
+                    <td>
+                        <form action="/article_publications/{{this.id}}?_method=DELETE" method="POST">
+                            <input type="hidden" name="source" value="catalogs/{{../entity.id}}" />
+                            <button type="Submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </div>
+            {{/each}}
+        </table>
+    </div>
+</div>

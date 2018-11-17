@@ -21,8 +21,19 @@ routes.use('/catalogs', catalogs);
 routes.use('/users', users);
 
 // Static routes
+// routes.get('/', (req, res, next) => {
+//     console.log(req.format);
+//     console.log(JSON.stringify(req.headers));
+//     console.log(JSON.stringify(req.httpVersion));
+//     console.log(JSON.stringify(req.method));
+//     console.log(JSON.stringify(req.rawHeaders));
+//     res.status(200).json({ message: 'Connected!' });
+// });
 routes.get('/', (req, res, next) => {
-    res.status(200).json({ message: 'Connected!' });
+    res.locals.render = 'welcome'
+    res.locals.data = { ip_address: req.connection.remoteAddress }
+    // res.render('welcome', { ip_address: req.connection.remoteAddress });
+    return next();
 });
 
 module.exports = routes;

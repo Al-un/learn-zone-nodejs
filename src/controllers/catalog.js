@@ -4,7 +4,7 @@ const { Catalog } = require('../sequelize');
 class CatalogController extends AppController {
 
     constructor() {
-        super(Catalog);
+        super(Catalog, 'catalogs');
     }
 
 }

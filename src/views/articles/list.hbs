@@ -1,0 +1,31 @@
+<div>
+    <h2>Articles</h2>
+
+    <a href="/articles/new">Create an article</a>
+
+    <table class="entity-list">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Show</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        {{#each list}}
+        <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{#truncate this.description 40}}{{/truncate}}</td>
+            <td><a href="/articles/{{this.id}}">Open</a></td>
+            <td><a href="/articles/{{this.id}}/edit">Edit</a></td>
+            <td>
+                <!-- WTF: PUT and DELETE not available on HTML -->
+                <form action="/articles/{{this.id}}?_method=DELETE" method="POST">
+                    <button type="Submit" class="delete-button">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+</div>
