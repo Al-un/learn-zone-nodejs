@@ -1,0 +1,25 @@
+@import '../base/mixins';
+// Common to all entities
+.entity-list {
+    width: 90%;
+    margin: auto;
+    td {
+        padding: 8px;
+    }
+    tr {
+        background: #fafafa;
+        @include transition(background, 0.2s);
+        &:hover {
+            background: #eee;
+        }
+    }
+}
+
+.entity-form {
+    width: 60%;
+    margin: auto;
+    input,
+    textarea {
+        width: 100%;
+    }
+}

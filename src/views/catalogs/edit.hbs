@@ -1,0 +1,26 @@
+<div>
+    <form method="POST" action="/catalogs/{{entity.id}}?_method=PATCH">
+        <table>
+            <tr>
+                <td>ID</td>
+                <td>{{entity.id}}</td>
+            </tr>
+            <tr>
+                <td>Code</td>
+                <td><input type="text" name="code" value="{{entity.code}}" /></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" name="name" value="{{entity.name}}" /></td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td><textarea name="description">{{entity.description}}</textarea></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="Submit" value="Update" /></td>
+            </tr>
+        </table>
+    </form>
+</div>

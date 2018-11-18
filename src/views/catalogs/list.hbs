@@ -1,0 +1,32 @@
+<div>
+    <h2>Catalogs</h2>
+
+    <a href="/catalogs/new">Create a catalog</a>
+
+    <table class="entity-list">
+        <tr>
+            <th>ID</th>
+            <th>Owner</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Show</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        {{#each list}}
+        <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.user_id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{#truncate this.description 40}}{{/truncate}}</td>
+            <td><a href="/catalogs/{{this.id}}">Open</a></td>
+            <td><a href="/catalogs/{{this.id}}/edit">Edit</a></td>
+            <td>
+                <form action="/catalogs/{{this.id}}?_method=DELETE" method="POST">
+                    <button type="Submit" class="delete-button">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+</div>

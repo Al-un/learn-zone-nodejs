@@ -1,0 +1,28 @@
+@import '../base/mixins';
+@import '../base/variables';
+/**
+ * This below code is specific to NodeJS LearnZone implementation so it is a 
+ * bit ugly...
+ */
+
+#nav-subtoolbar {
+    @include flexbox;
+    height: $toolbar-height/1.5;
+    background-color: $color-primary-light;
+    a {
+        @include transition(background, 0.2s);
+        text-decoration: none;
+        color: white;
+        display: block;
+        width: 200px;
+        text-align: center;
+        line-height: $toolbar-height/1.5;
+        border-left: 1px solid white;
+        &:last-child {
+            border-right: 1px solid white;
+        }
+        &:hover {
+            background-color: $color-primary;
+        }
+    }
+}
