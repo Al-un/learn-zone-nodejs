@@ -142,3 +142,14 @@ button {
         }
     }
 }
+
+// ---------- Misc -------------------------------------------------------------
+pre.formatted-json {
+    width: 96%;
+    padding: 2%;
+    margin: auto;
+    word-break: break-all;
+    white-space: pre-wrap;
+    background: #111;
+    color: #2E2;
+}

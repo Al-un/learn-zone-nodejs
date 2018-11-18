@@ -57,7 +57,8 @@ class AppController {
             .findAll(this.getEntitiesListFetchOptions())
             .then(entities => {
                 res.locals.render = this._route + view_list;
-                res.locals.data = entities;
+                res.locals.data_json = entities;
+                res.locals.data_view = { list: entities };
                 res.locals.status = 200;
                 return next();
             })
@@ -77,7 +78,8 @@ class AppController {
             .findByPk(id, this.getSingleEntityFetchOptions())
             .then(entity => {
                 res.locals.render = this._route + view_show;
-                res.locals.data = entity;
+                res.locals.data_json = entity;
+                res.locals.data_view = { entity: entity };
                 res.locals.status = 200;
                 return next();
             })
@@ -129,7 +131,8 @@ class AppController {
             .create(req.body)
             .then(entity => {
                 res.locals.redirect = req.body.source || this._route + '/' + entity.id;
-                res.locals.data = entity;
+                res.locals.data_json = entity;
+                res.locals.data_view = { entity: entity };
                 res.locals.status = 201;
                 return next();
             })
@@ -148,7 +151,8 @@ class AppController {
             .findByPk(id, this.getSingleEntityFetchOptions())
             .then(entity => {
                 res.locals.render = this._route + view_edit;
-                res.locals.data = entity;
+                res.locals.data_json = entity;
+                res.locals.data_view = { entity: entity };
                 res.locals.status = 200;
                 return next();
             })
@@ -216,7 +220,8 @@ class AppController {
         this._model
             .findAll(search_options)
             .then(entities => {
-                res.locals.data = entities;
+                res.locals.data_json = entities;
+                res.locals.data_view = { list: entities };
                 res.locals.status = 200;
                 return next();
             })

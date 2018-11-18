@@ -1,17 +1,17 @@
 <div>
-    <form method="POST" action="/articles/{{data.id}}?_method=PATCH">
+    <form method="POST" action="/articles/{{entity.id}}?_method=PATCH">
         <table>
             <tr>
                 <td>ID</td>
-                <td>{{data.id}}</td>
+                <td>{{entity.id}}</td>
             </tr>
             <tr>
                 <td>Name</td>
-                <td><input type="text" name="name" value="{{data.name}}" /></td>
+                <td><input type="text" name="name" value="{{entity.name}}" /></td>
             </tr>
             <tr>
                 <td>Description</td>
-                <td><textarea name="description">{{data.description}}</textarea></td>
+                <td><textarea name="description">{{entity.description}}</textarea></td>
             </tr>
             <tr>
                 <td></td>

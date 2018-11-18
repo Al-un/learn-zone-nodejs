@@ -20,16 +20,29 @@
         </div>
         <div class='flex-pusher'>
         </div>
-        <div class='nav-auth-menu'>
 
+        <div class='nav-auth-menu'>
+            {{#unless user}}
+            <a href="/login">
+                <i class="fas fa-user"></i>
+                <span>Login</span>
+            </a>
+            {{else}}
+            <a href="/logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+            {{/unless}}
         </div>
     </header>
     <header id="nav-subtoolbar">
         <a href="/catalogs/">Catalogs</a>
         <a href="/articles/">Articles</a>
+        <a href="/misc-info/">Misc-info</a>
     </header>
 
     <div id="nav-container">
+        {{pouet}}
         {{{body}}}
     </div>
 </body>

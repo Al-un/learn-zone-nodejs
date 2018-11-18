@@ -55,8 +55,9 @@ app.set('view engine', 'hbs')
 app.set('views', path.join(__dirname, 'views'))
 
 // config express-session
+// secret: https://randomkeygen.com/
 var sess = {
-    secret: 'CHANGE THIS SECRET',
+    secret: 'woBbcG7i1FUMGyAfPefGML3nDQNTeoxrM3GgJ1eYxb5Jjd07Izwq1nl69S29cAhu234nicKqvQsMEBwpqgCrVBIqHydOuG95',
     cookie: {},
     resave: false,
     saveUninitialized: true
@@ -64,6 +65,7 @@ var sess = {
 if (app.get('env') === 'production') {
     sess.cookie.secure = true; // serve secure cookies, requires https
 }
+// this needs to be defined before passport configuration
 app.use(session(sess));
 
 module.exports = app;

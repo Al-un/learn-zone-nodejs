@@ -11,8 +11,12 @@ const PORT = process.env.PORT || 3000;
 const app =  require('./src/express');
 
 // Auth0 authentication
-const auth0_auth_config = require('./src/auth');
-auth0_auth_config(app);
+const passport = require('./src/auth');
+app.use(passport.initialize());
+app.use(passport.session());
+// Loading user
+const loadUserForViews = require('./src/middleware/loadUserForView');
+app.use(loadUserForViews());
 
 // Routing
 const routes = require('./src/routes')
@@ -20,6 +24,9 @@ app.use('/', routes)
 // Responder
 const responder = require('./src/middleware/responder.js');
 app.use('/', responder);
+// Error handling
+const errorHandler = require('./src/middleware/errorHandler');
+app.use(errorHandler());
 
 // Run
 app.listen(PORT, () => {

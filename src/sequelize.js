@@ -36,8 +36,8 @@ Catalog = CatalogModel(sequelize, Sequelize)
 ArticlePublication = ArticlePublicationModel(sequelize, Sequelize)
 
 // Define associations
-Article.hasOne(User)
-Catalog.hasOne(User)
+Article.belongsTo(User)
+Catalog.belongsTo(User)
 Article.hasMany(ArticlePublication)
 Catalog.hasMany(ArticlePublication)
 Article.belongsToMany(Catalog, { through: 'ArticlePublication' })
