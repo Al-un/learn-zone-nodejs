@@ -6,6 +6,7 @@
     <table class="entity-list">
         <tr>
             <th>ID</th>
+            <th>Owner</th>
             <th>Name</th>
             <th>Description</th>
             <th>Show</th>
@@ -15,6 +16,7 @@
         {{#each list}}
         <tr>
             <td>{{this.id}}</td>
+            <td>{{this.user_id}}</td>
             <td>{{this.name}}</td>
             <td>{{#truncate this.description 40}}{{/truncate}}</td>
             <td><a href="/articles/{{this.id}}">Open</a></td>

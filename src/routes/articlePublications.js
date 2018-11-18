@@ -4,8 +4,8 @@ var router = require('express').Router();
 const { ArticlePublicationController } = require('../controllers/articlePublication');
 var controller = new ArticlePublicationController();
 
-router.get('/:id', controller.dispatch_id);
-router.post('/', secured(), controller.create)
-router.delete('/:id', secured(), controller.delete)
+router.get('/:id', controller.show);
+router.post('/', secured, controller.create)
+router.delete('/:id', secured, controller.delete)
 
 module.exports = router

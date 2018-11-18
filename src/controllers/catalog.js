@@ -7,6 +7,19 @@ class CatalogController extends AppController {
         super(Catalog, 'catalogs');
     }
 
+    createParams(req, res) {
+        var params = req.body;
+        Object.assign(params, { user_id: res.locals.user_id })
+        return params;
+    }
+
+    updateParams(req, res) {
+        var params = req.body;
+        // [TMP-001] !!!!
+        Object.assign(params, { user_id: res.locals.user_id })
+        return params;
+    }
+
     formatSearchOptions(query_params) {
         var search_options = {};
 

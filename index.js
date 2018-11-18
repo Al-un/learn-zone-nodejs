@@ -15,15 +15,12 @@ const passport = require('./src/auth');
 app.use(passport.initialize());
 app.use(passport.session());
 // Loading user
-const loadUserForViews = require('./src/middleware/loadUserForView');
-app.use(loadUserForViews());
+const loadUser = require('./src/middleware/loadUser');
+app.use(loadUser());
 
 // Routing
 const routes = require('./src/routes')
 app.use('/', routes)
-// Responder
-const responder = require('./src/middleware/responder.js');
-app.use('/', responder);
 // Error handling
 const errorHandler = require('./src/middleware/errorHandler');
 app.use(errorHandler());

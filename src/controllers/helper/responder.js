@@ -1,4 +1,4 @@
-module.exports = function respond_by_accept(req, res, next) {
+module.exports = (req, res, next) => {
     console.log(`Responding to ${req.method}${req.originalUrl} with format ${req.headers.accept}`);
     if (req.headers.accept.includes("text/html")) {
         if (res.locals.render) {

@@ -1,7 +1,8 @@
 module.exports = function () {
     return function (err, req, res, next) {
-        console.log(`Error:${err}`);
+        console.log(`[Error] ${err}`);
         var statusCode;
+        // Auth0 error
         if (err.name === 'UnauthorizedError') {
             statusCode = 403;
         }

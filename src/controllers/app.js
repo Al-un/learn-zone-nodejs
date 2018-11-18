@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-
+const respond = require('./helper/responder');
 /**
  * Most basic version of a controller related to a given entity
  * 
@@ -36,7 +36,6 @@ class AppController {
         this._model = model;
         this._route = route_root;
         this.list = this.list.bind(this);
-        this.dispatch_id = this.dispatch_id.bind(this);
         this.show = this.show.bind(this);
         this.new = this.new.bind(this);
         this.create = this.create.bind(this);
@@ -60,7 +59,7 @@ class AppController {
                 res.locals.data_json = entities;
                 res.locals.data_view = { list: entities };
                 res.locals.status = 200;
-                return next();
+                respond(req, res, next);
             })
             .catch(error => res.status(400).send(error));
     }
@@ -81,30 +80,9 @@ class AppController {
                 res.locals.data_json = entity;
                 res.locals.data_view = { entity: entity };
                 res.locals.status = 200;
-                return next();
+                respond(req, res, next);
             })
             .catch(error => res.status(400).send(error));
-    }
-
-    /**
-     * When filtering `/:id` path, handle specific case:
-     * - "new" prepare for a creation of a new entity
-     * - "search" returns a list of queried entities
-     * - remaining values are assumed to be an ID
-     * 
-     * @param {http.IncomingMessage} req incoming request
-     * @param {http.ServerResponse} res output response 
-     * @param {function} next next middleware function
-     */
-    dispatch_id(req, res, next) {
-        switch (req.params.id) {
-            case "new":
-                return this.new(req, res, next);
-            case "search":
-                return this.search(req, res, next);
-            default:
-                this.show(req, res, next);
-        }
     }
 
     /**
@@ -116,7 +94,7 @@ class AppController {
     new(req, res, next) {
         res.locals.render = this._route + view_new;
         res.locals.status = 204; // nothing to send for JSON
-        return next();
+        respond(req, res, next);
     }
 
     /**
@@ -126,15 +104,16 @@ class AppController {
      * @param {function} next next middleware function
      */
     create(req, res, next) {
-        console.log(`Creating with body (parameters): ${JSON.stringify(req.body)}`);
+        var createParams = this.createParams(req, res);
+        console.log(`Creating with body (parameters): ${JSON.stringify(createParams)}`);
         this._model
-            .create(req.body)
+            .create(createParams)
             .then(entity => {
                 res.locals.redirect = req.body.source || this._route + '/' + entity.id;
                 res.locals.data_json = entity;
                 res.locals.data_view = { entity: entity };
                 res.locals.status = 201;
-                return next();
+                respond(req, res, next);
             })
             .catch(error => res.status(400).send(error));
     }
@@ -154,7 +133,7 @@ class AppController {
                 res.locals.data_json = entity;
                 res.locals.data_view = { entity: entity };
                 res.locals.status = 200;
-                return next();
+                respond(req, res, next);
             })
             .catch(error => res.status(400).send(error));
     }
@@ -166,15 +145,17 @@ class AppController {
      * @param {function} next next middleware function
      */
     update(req, res, next) {
+        var updateParams = this.updateParams(req, res);
+        console.log(`Updating with body (parameters): ${JSON.stringify(updateParams)}`);
         this._model
             .update(
-                req.body,
+                updateParams,
                 { where: { id: req.params.id } }
             )
             .then(entity => {
                 res.locals.status = 204; // JSON response
                 res.locals.redirect = this._route + '/' + req.params.id; // HTML Response
-                return next();
+                respond(req, res, next);
             })
             .catch(error => res.status(400).send(error));
     }
@@ -203,7 +184,7 @@ class AppController {
                     res.locals.status = 400;
                     res.locals.message = 'Deletion has failed';
                 }
-                return next();
+                respond(req, res, next);
             })
     }
 
@@ -223,12 +204,30 @@ class AppController {
                 res.locals.data_json = entities;
                 res.locals.data_view = { list: entities };
                 res.locals.status = 200;
-                return next();
+                respond(req, res, next);
             })
             .catch(error => res.status(400).send(error));
     }
 
     // ---------- Support methods ----------------------------------------------
+
+    /**
+     * Define parameters for entity creation
+     * @param {*} req 
+     * @param {*} res
+     */
+    createParams(req, res) {
+        return req.body;
+    }
+
+    /**
+     * Define parameters for entity update
+     * @param {*} req 
+     * @param {*} res
+     */
+    updateParams(req, res) {
+        return req.body;
+    }
 
     /**
      * Convert search input into appropriate search parameters for WHERE clause.
