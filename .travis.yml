@@ -24,6 +24,12 @@ script:
 after_script:
   # Code Climate: sending report
   - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
+after_script:
+  # Code Climate: sending reporting only for "node"
+  - |
+    if [ "$TRAVIS_NODE_VERSION" == "node" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then 
+      ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; 
+    fi
 
 notifications:
   slack:
