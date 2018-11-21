@@ -1,6 +1,6 @@
 // Express
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 // Express Handlebars
 const handlebars = require('handlebars');
 const expressHandlebars = require('express-handlebars');
@@ -11,7 +11,7 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 
 // Express
-const app = express()
+const app = express();
 
 // Method override
 // https://www.npmjs.com/package/method-override
@@ -20,51 +20,56 @@ app.use(methodOverride('_method'));
 
 // https://stackoverflow.com/a/4296402/4906586
 /** bodyParser.urlencoded(options)
- * Parses the text as URL encoded data (which is how browsers tend to send form 
- * data from regular forms set to POST) and exposes the resulting object 
+ * Parses the text as URL encoded data (which is how browsers tend to send form
+ * data from regular forms set to POST) and exposes the resulting object
  * (containing the keys and values) on req.body
  */
-app.use(bodyParser.urlencoded({
+app.use(
+  bodyParser.urlencoded({
     extended: true
-}));
+  })
+);
 /**bodyParser.json(options)
  * Parses the text as JSON and exposes the resulting object on req.body.
  */
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 // static files: https://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 // Configure Express-handlebars
 // https://stackoverflow.com/a/42120699/4906586
 // https://gist.github.com/TastyToast/5053642
-handlebars.registerHelper('truncate', function (str, len) {
-    if (str.length > len) {
-        var new_str = str.substr(0, len + 1);
-        return new handlebars.SafeString(new_str + '...');
-    }
-    return str;
+handlebars.registerHelper('truncate', function(str, len) {
+  if (str.length > len) {
+    var new_str = str.substr(0, len + 1);
+    return new handlebars.SafeString(new_str + '...');
+  }
+  return str;
 });
 
-app.engine('hbs', expressHandlebars({
+app.engine(
+  'hbs',
+  expressHandlebars({
     defaultLayout: 'main',
     extname: '.hbs',
     layoutsDir: path.join(__dirname, 'views/layouts')
-}));
-app.set('view engine', 'hbs')
-app.set('views', path.join(__dirname, 'views'))
+  })
+);
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 // config express-session
 // secret: https://randomkeygen.com/
 var sess = {
-    secret: 'woBbcG7i1FUMGyAfPefGML3nDQNTeoxrM3GgJ1eYxb5Jjd07Izwq1nl69S29cAhu234nicKqvQsMEBwpqgCrVBIqHydOuG95',
-    cookie: {},
-    resave: false,
-    saveUninitialized: true
+  secret: process.env.EXPRESS_SESSION_SECRET,
+  cookie: {},
+  resave: false,
+  saveUninitialized: true
 };
-if (app.get('env') === 'production') {
-    sess.cookie.secure = true; // serve secure cookies, requires https
-}
+// if (app.get('env') === 'production') {
+//     sess.cookie.secure = true; // serve secure cookies, requires https
+// }
 // this needs to be defined before passport configuration
 app.use(session(sess));
 

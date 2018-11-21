@@ -6,6 +6,10 @@
 NodeJS implementation of the LearnZone project. Parent repository is 
 https://github.com/Al-un/learn-zone
 
+# Temp
+
+ - [Cookies are not secured](https://github.com/Al-un/learn-zone-nodejs/issues/3)
+
 # Notes
 
  - Writing NodeJS Code in ES6: 
