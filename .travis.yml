@@ -1,11 +1,33 @@
-language:
-  node_js
+language: node_js
 node_js:
-  - "11.1.0"  # Developping under this version
-  - "node"    # latest stable Node.js release
+  - '11.1.0' # Developping under this version
+  - 'node' # latest stable Node.js release
 cache:
   directories:
-    - "node_modules"
+    - 'node_modules'
+
+env:
+  global:
+    # Code Climate reporter id
+    secure: "UFqwYcy0S0hFP5eFZJgxrXyh7val02j91wXhH7EXLEd5FVTbjk++rczXrl8b9U6pP8iltplh2FVFp4GKDtxK5Bo8o4Zfe2Kxeo1m9ommd8ysk7p+TrY3FhmgMrstYoS27iDFZ+CMQr09Hn69lDYVzj+yONEHKKje/rsI5v3EAQ6SzRn/7RVXbdMpl7Ac8ZNoKgXcweIUjKPpJqxruCc/c4ZTJpgMo0RowwRGd1eBt6fd3fEXPAt8v1nWerQ5wjrGi/9NaQ3E6HP9YFnX139inlbQMZ1awWvNkgB1bd6Zhm22YQu17W+7oNrLK/rXbsZpDhovroBtEG5gzL89hFWfF97zPjUYrwlOvy1ldpC7mUfPNTjGZMrr8aZ4eTWP2Xdq9Ct4mRVYgi7u+4cqK7tvg04XWnpIn6sYuEKdhX+PJLgKsmOOIIbJPVHJ1W3DEjM/CKKNMjfHq1oSAYNCGHsxX4zOpbTfrfZ26zEr98ftCTWqwjf+HXN4bpjZJuu3BNur7sMS0ETtYIfa5pkka4b+XfKCP4OYTvOUOBh3Jo/ripHP+uOmfC5GAJMl0F1hTnLsiFVxHWOOPxap00JOkqJKUXyuojHgkjosXP61S2XhogXhwPS0eV8hVsh8i3khN/G//va6zPAf9/Ygf91B3nTLHOypXHbKU7gR170CsBigKeY="
+
+before_script:
+  # Code Climate: initialization
+  # [TODO] test format to define
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 script:
   - npm test
+
+after_script:
+  # Code Climate: sending report
+  - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
+
+notifications:
+  slack:
+    rooms:
+      secure: s7Ih9EdHnmv540ScoYw2ZqhxPb90xXSEP0rabgrqw9hQ69EjH7H8SLVRrC7R6K+jRT7Rh38W6EM+jU3u9cPav4ENG9sILL5D+KWrvfKaEhcpBP03Ax7X4PMLOsIR/IU+35tCxgQWuSt96Uh8G+jSt3XSKzbphUABfDGGnNjwovOiPok9E2OzGFAXqJ4U/gY+KlTU6uIdKovsPYRArEnc6KtxxPN5+m3LjcMP1grpTFOw60WZ5Q3WAYwr/SE0wQbIoS4p7YOaLw6GNVh5HQsuziM8v5veciLFGY15uw5NCzx/OhqlRJuIlpJvk6zXDkHtY0pm4WKW7yF6wiMxV2X7Wvsm7+hYUpyigu5sQeFKgWBooZeJajqyb66Tmb/nbj3ltIk+B3yW8IK9VW+Gv42dkHqgqJAs9U935FUZufa09COKGU0AaofqX9zvcUefGDqRWXsP8SZucixd5AIw4220kSKB0pZIhYpXE2GBH/U87YXyblciGkey955I82Soy4Pdn5O2Tra8qt8m2s1T8gr0gf/F6ZzcWHIfIVev/f0zwNc+4y9SEeK6hQQSBHY0F9UhpqnBjB22rp7H9Ae3/xAVUD+kQwy3qVD7+XsDZ/XbtY7mdEj2ci1Bbh9/nobMJQEGmev7BuXvjHbTsg0WYf6TphnAEV1FICTMV421pubXsyg=
+    on_success: always
+    on_failure: always
