@@ -4,7 +4,7 @@
   "description": "Learning Zone NodeJS implementation",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=clover mocha",
+    "test": "nyc --reporter=lcov mocha",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "start_to_improve": "npm run build && node dist/index.js",
     "dev": "nodemon ./index.js",
