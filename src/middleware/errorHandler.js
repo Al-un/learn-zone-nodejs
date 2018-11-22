@@ -6,7 +6,6 @@ module.exports = function() {
         if (err.name === "UnauthorizedError") {
             statusCode = 403;
         }
-
         // Unknown errors
         else {
             statusCode = 500;

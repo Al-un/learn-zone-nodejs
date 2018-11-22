@@ -4,27 +4,30 @@ module.exports = (req, res, next) => {
             req.headers.accept
         }`
     );
+
+    // HTML response
     if (req.headers.accept.includes("text/html")) {
-        if (res.locals.render) {
-            console.log(`Rendering view ${res.locals.render}`);
-            var dataView = Object.assign(
-                {},
-                res.locals.dataView,
-                res.locals.user
-            );
-            res.render(res.locals.render, dataView);
-        } else if (res.locals.redirect) {
+        const dataView = res.locals.dataView;
+        // Redirection has precedence over rendering
+        if (res.locals.redirect) {
             console.log(`Redirecting to ${res.locals.redirect}`);
             res.redirect("/" + res.locals.redirect);
-        } else {
-            console.log(
-                `No view provided for data ${
-                    res.locals.dataView
-                } Next() called.`
-            );
+        }
+        // View rendering
+        else if (res.locals.render) {
+            console.log(`Rendering view ${res.locals.render}`);
+            const userDataView = Object.assign({}, dataView, res.locals.user);
+            res.render(res.locals.render, userDataView);
+        }
+        // Backed to default behaviour
+        else {
+            console.log(`No view provided for data ${dataView} Next() called.`);
             return next();
         }
-    } else if (req.headers.accept.includes("application/json")) {
+    }
+
+    // JSON response
+    else if (req.headers.accept.includes("application/json")) {
         console.log("Render a JSON response");
         // data?
         if (res.locals.dataJson) {

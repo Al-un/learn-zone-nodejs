@@ -16,10 +16,10 @@ const respond = require("./helper/responder");
  *  > Crud with Sequelize:
  *  https://lorenstewart.me/2016/10/03/sequelize-crud-101/
  */
-const view_new = "/new";
-const view_show = "/show";
-const view_edit = "/edit";
-const view_list = "/list";
+const VIEW_NEW = "/new";
+const VIEW_SHOW = "/show";
+const VIEW_EDIT = "/edit";
+const VIEW_LIST = "/list";
 
 class AppController {
     /**
@@ -42,6 +42,7 @@ class AppController {
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.search = this.search.bind(this);
+        this.showEntity = this.renderData.bind(this);
     }
 
     /**
@@ -53,13 +54,12 @@ class AppController {
     list(req, res, next) {
         this._model
             .findAll(this.getEntitiesListFetchOptions())
-            .then(entities => {
-                res.locals.render = this._route + view_list;
-                res.locals.dataJson = entities;
-                res.locals.dataView = { list: entities };
-                res.locals.status = 200;
-                respond(req, res, next);
-            })
+            .then(entities =>
+                this.renderData(req, res, next, {
+                    data: entities,
+                    path: VIEW_LIST
+                })
+            )
             .catch(error => res.status(400).send(error));
     }
 
@@ -74,13 +74,12 @@ class AppController {
         console.log(`Showing entity for PK ${id}`);
         this._model
             .findByPk(id, this.getSingleEntityFetchOptions())
-            .then(entity => {
-                res.locals.render = this._route + view_show;
-                res.locals.dataJson = entity;
-                res.locals.dataView = { entity: entity };
-                res.locals.status = 200;
-                respond(req, res, next);
-            })
+            .then(entity =>
+                this.renderData(req, res, next, {
+                    data: entity,
+                    path: VIEW_SHOW
+                })
+            )
             .catch(error => res.status(400).send(error));
     }
 
@@ -91,9 +90,10 @@ class AppController {
      * @param {function} next next middleware function
      */
     new(req, res, next) {
-        res.locals.render = this._route + view_new;
-        res.locals.status = 204; // nothing to send for JSON
-        respond(req, res, next);
+        this.renderData(req, res, next, {
+            status: 204,
+            path: VIEW_NEW
+        });
     }
 
     /**
@@ -109,14 +109,13 @@ class AppController {
         );
         this._model
             .create(createParams)
-            .then(entity => {
-                res.locals.redirect =
-                    req.body.source || this._route + "/" + entity.id;
-                res.locals.dataJson = entity;
-                res.locals.dataView = { entity: entity };
-                res.locals.status = 201;
-                respond(req, res, next);
-            })
+            .then(entity =>
+                this.renderData(req, res, next, {
+                    redirect: this._route + "/" + entity.id,
+                    data: entity,
+                    status: 201
+                })
+            )
             .catch(error => res.status(400).send(error));
     }
 
@@ -130,13 +129,12 @@ class AppController {
         var id = req.params.id;
         this._model
             .findByPk(id, this.getSingleEntityFetchOptions())
-            .then(entity => {
-                res.locals.render = this._route + view_edit;
-                res.locals.dataJson = entity;
-                res.locals.dataView = { entity: entity };
-                res.locals.status = 200;
-                respond(req, res, next);
-            })
+            .then(entity =>
+                this.renderData(req, res, next, {
+                    data: entity,
+                    path: VIEW_EDIT
+                })
+            )
             .catch(error => res.status(400).send(error));
     }
 
@@ -153,11 +151,12 @@ class AppController {
         );
         this._model
             .update(updateParams, { where: { id: req.params.id } })
-            .then(entity => {
-                res.locals.status = 204; // JSON response
-                res.locals.redirect = this._route + "/" + req.params.id; // HTML Response
-                respond(req, res, next);
-            })
+            .then(entity =>
+                this.renderData(req, res, next, {
+                    status: 204,
+                    redirect: this._route + "/" + req.params.id
+                })
+            )
             .catch(error => res.status(400).send(error));
     }
 
@@ -202,23 +201,24 @@ class AppController {
         );
         this._model
             .findAll(search_options)
-            .then(entities => {
-                res.locals.dataJson = entities;
-                res.locals.dataView = { list: entities };
-                res.locals.status = 200;
-                respond(req, res, next);
-            })
+            .then(entities =>
+                this.renderData(req, res, next, entities, undefined, 200)
+            )
             .catch(error => res.status(400).send(error));
     }
 
     // ---------- Support methods ----------------------------------------------
+
+    mergeParamsWithUser(params, res) {
+        return Object.assign({}, params, { user_id: res.locals.user_id });
+    }
 
     /**
      * Define parameters for entity creation
      * @param {*} req
      * @param {*} res
      */
-    createParams(req, res) {
+    createParams(req, _res) {
         return req.body;
     }
 
@@ -227,7 +227,7 @@ class AppController {
      * @param {*} req
      * @param {*} res
      */
-    updateParams(req, res) {
+    updateParams(req, _res) {
         return req.body;
     }
 
@@ -256,6 +256,42 @@ class AppController {
      */
     getEntitiesListFetchOptions() {
         return {};
+    }
+
+    /**
+     * Responding for a given entity based on output. Output attributes are:
+     * - data: entities list or a single entity
+     * - path: rendered view path
+     * - status: default to 200
+     * - message: if a custom message has to be added
+     * @param {*} output output object
+     */
+    renderData(req, res, next, output) {
+        // mandatory status
+        res.locals.status = output.status || 200;
+
+        // Path: source has precedence
+        if (req.body.source) {
+            res.locals.redirect = req.body.source;
+        } else if (output.redirect) {
+            res.locals.redirect = output.redirect;
+        }
+        // Relative path
+        if (output.path) {
+            res.locals.render = this._route + output.path;
+        }
+
+        // optional data
+        if (output.data) {
+            console.log(`output.data.constructor: ${output.data.constructor}`);
+            res.locals.dataJson = output.data;
+            res.locals.dataView =
+                output.data.constructor === Array
+                    ? { list: output.data }
+                    : { entity: output.data };
+        }
+
+        respond(req, res, next);
     }
 }
 

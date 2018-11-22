@@ -14,22 +14,19 @@ const { User } = require("../models/sequelize");
 function handleAuthentication(req, res, next) {
     console.log(`Secured: checking authentication`);
     if (!req.user && !req.headers.authorization) {
-        res.status(401);
+        // Log
+        const err_msg = `Authentication required for ${req.originalUrl}.`;
+        console.log("[Secured] " + err_msg);
+
+        // HTML browsing
         if (req.headers.accept.includes("text/html")) {
-            console.log(
-                `Authentication is required for ${
-                    req.originalUrl
-                }. Redirect to login`
-            );
             req.session.returnTo = req.originalUrl;
             res.redirect("/login");
-        } else {
-            console.log(
-                `Authentication is required to access ${req.originalUrl}.`
-            );
-            res.json({
-                error: `Authentication is required to access ${req.originalUrl}`
-            });
+        }
+        // JSON authentication
+        else {
+            res.status(401);
+            res.json({ error: err_msg });
         }
     } else {
         next();
@@ -90,22 +87,18 @@ function loadUserId(req, res, next) {
             if (result === null) {
                 User.create({ auth0_id: req.user.sub })
                     .then(newUser => {
-                        console.log(
-                            `Creating user for Auth0_Id ${req.user.sub}`
-                        );
+                        console.log(`[Secured] Creating user: ${req.user.sub}`);
                         res.locals.user_id = newUser.id;
                         return next();
                     })
                     .catch(error => {
-                        console.log(
-                            `Error when creating user ${req.user.sub}: ${error}`
-                        );
+                        console.log(`[Secured] ${req.user.sub} has: ${error}`);
                         return next();
                     });
             }
             // fetch user
             else {
-                console.log(`Secured: result: ${JSON.stringify(result)}`);
+                console.log(`[Secured] loading user#${result.id}`);
                 res.locals.user_id = result.id;
                 return next();
             }

@@ -15,10 +15,7 @@ module.exports = (sequelize, type) => {
             description: type.STRING,
             user_id: {
                 type: type.INTEGER,
-                references: {
-                    model: "user",
-                    key: "id"
-                }
+                references: { model: "user", key: "id" }
             }
         },
         // options

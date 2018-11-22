@@ -7,16 +7,7 @@ class ArticleController extends AppController {
     }
 
     createParams(req, res) {
-        var params = req.body;
-        Object.assign(params, { user_id: res.locals.user_id });
-        return params;
-    }
-
-    updateParams(req, res) {
-        var params = req.body;
-        // [TMP-001] !!!!
-        Object.assign(params, { user_id: res.locals.user_id });
-        return params;
+        return this.mergeParamsWithUser(req.body, res);
     }
 
     formatSearchOptions(query_params) {

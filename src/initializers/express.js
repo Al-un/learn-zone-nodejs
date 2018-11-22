@@ -53,11 +53,11 @@ app.engine(
     expressHandlebars({
         defaultLayout: "main",
         extname: ".hbs",
-        layoutsDir: path.join(__dirname, "views/layouts")
+        layoutsDir: path.join(__dirname, "../views/layouts")
     })
 );
 app.set("view engine", "hbs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "../views"));
 
 // config express-session
 // secret: https://randomkeygen.com/
