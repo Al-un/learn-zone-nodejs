@@ -1,0 +1,7 @@
+# Prettier local configuration
+# https://prettier.io/docs/en/configuration.html
+# https://prettier.io/docs/en/options.html
+printWidth: 80 # default value
+useTabs: false # default value
+tabWidth: 4
+singleQuote: false
