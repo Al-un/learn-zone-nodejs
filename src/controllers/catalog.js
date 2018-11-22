@@ -1,5 +1,5 @@
 const { AppController, Sequelize } = require("./app");
-const { Catalog } = require("../models/sequelize");
+const { Catalog, ArticlePublication } = require("../models/sequelize");
 
 class CatalogController extends AppController {
     constructor() {
