@@ -42,7 +42,6 @@ class AppController {
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.search = this.search.bind(this);
-        this.showEntity = this.renderData.bind(this);
     }
 
     /**
@@ -57,7 +56,7 @@ class AppController {
             .then(entities =>
                 this.renderData(req, res, next, {
                     data: entities,
-                    path: VIEW_LIST
+                    render: this._route + VIEW_LIST
                 })
             )
             .catch(error => res.status(400).send(error));
@@ -77,7 +76,7 @@ class AppController {
             .then(entity =>
                 this.renderData(req, res, next, {
                     data: entity,
-                    path: VIEW_SHOW
+                    render: this._route + VIEW_SHOW
                 })
             )
             .catch(error => res.status(400).send(error));
@@ -92,7 +91,7 @@ class AppController {
     new(req, res, next) {
         this.renderData(req, res, next, {
             status: 204,
-            path: VIEW_NEW
+            render: this._route + VIEW_NEW
         });
     }
 
@@ -132,7 +131,7 @@ class AppController {
             .then(entity =>
                 this.renderData(req, res, next, {
                     data: entity,
-                    path: VIEW_EDIT
+                    render: this._route + VIEW_EDIT
                 })
             )
             .catch(error => res.status(400).send(error));
@@ -261,7 +260,8 @@ class AppController {
     /**
      * Responding for a given entity based on output. Output attributes are:
      * - data: entities list or a single entity
-     * - path: rendered view path
+     * - redirect: redirected page. Overridden by req.body.source
+     * - render: rendered view full path (root included)
      * - status: default to 200
      * - message: if a custom message has to be added
      * @param {*} output output object
@@ -269,22 +269,15 @@ class AppController {
     renderData(req, res, next, output) {
         // mandatory status
         res.locals.status = output.status || 200;
-
         // Path: source has precedence
-        if (req.body.source) {
-            res.locals.redirect = req.body.source;
-        } else if (output.redirect) {
-            res.locals.redirect = output.redirect;
-        }
+        res.locals.redirect = req.body.source || output.redirect;
         // Relative path
-        if (output.path) {
-            res.locals.render = this._route + output.path;
-        }
+        res.locals.render = output.render;
+        // Data: JSON
+        res.locals.dataJson = output.data;
 
         // optional data
         if (output.data) {
-            console.log(`output.data.constructor: ${output.data.constructor}`);
-            res.locals.dataJson = output.data;
             res.locals.dataView =
                 output.data.constructor === Array
                     ? { list: output.data }
