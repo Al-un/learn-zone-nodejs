@@ -1,12 +1,10 @@
-const { AppController, Sequelize } = require('./app')
-const { ArticlePublication } = require('../sequelize');
+const { AppController, Sequelize } = require("./app");
+const { ArticlePublication } = require("../models/sequelize");
 
 class ArticlePublicationController extends AppController {
-
     constructor() {
-        super(ArticlePublication, 'article_publications');
+        super(ArticlePublication, "article_publications");
     }
-
 }
 
 module.exports = { ArticlePublicationController };

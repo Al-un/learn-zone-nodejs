@@ -1,22 +1,21 @@
-const { AppController, Sequelize } = require('./app');
-const { Catalog } = require('../sequelize');
+const { AppController, Sequelize } = require("./app");
+const { Catalog } = require("../models/sequelize");
 
 class CatalogController extends AppController {
-
     constructor() {
-        super(Catalog, 'catalogs');
+        super(Catalog, "catalogs");
     }
 
     createParams(req, res) {
         var params = req.body;
-        Object.assign(params, { user_id: res.locals.user_id })
+        Object.assign(params, { user_id: res.locals.user_id });
         return params;
     }
 
     updateParams(req, res) {
         var params = req.body;
         // [TMP-001] !!!!
-        Object.assign(params, { user_id: res.locals.user_id })
+        Object.assign(params, { user_id: res.locals.user_id });
         return params;
     }
 
@@ -24,15 +23,21 @@ class CatalogController extends AppController {
         var search_options = {};
 
         if (query_params.name) {
-            search_options['name'] = { [Sequelize.Op.like]: `%${query_params.name}%` };
+            search_options["name"] = {
+                [Sequelize.Op.like]: `%${query_params.name}%`
+            };
         }
         if (query_params.code) {
-            search_options['code'] = { [Sequelize.Op.like]: `%${query_params.code}%` };
+            search_options["code"] = {
+                [Sequelize.Op.like]: `%${query_params.code}%`
+            };
         }
 
-        var search_options = Object.assign({},
+        var search_options = Object.assign(
+            {},
             { where: search_options },
-            this.getEntitiesListFetchOptions());
+            this.getEntitiesListFetchOptions()
+        );
 
         return search_options;
     }

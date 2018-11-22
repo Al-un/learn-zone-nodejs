@@ -1,5 +1,6 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define('user',
+    return sequelize.define(
+        "user",
         // columns definition
         {
             id: {
@@ -14,9 +15,9 @@ module.exports = (sequelize, type) => {
         },
         // options
         {
-            tableName: 'users',
+            tableName: "users",
             timestamps: true,
             underscored: true
         }
-    )
-}
+    );
+};

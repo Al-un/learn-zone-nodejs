@@ -1,9 +1,9 @@
-module.exports = function () {
-    return function (err, req, res, next) {
+module.exports = function() {
+    return function(err, req, res, next) {
         console.log(`[Error] ${err}`);
         var statusCode;
         // Auth0 error
-        if (err.name === 'UnauthorizedError') {
+        if (err.name === "UnauthorizedError") {
             statusCode = 403;
         }
 
@@ -16,8 +16,7 @@ module.exports = function () {
         res.status(statusCode);
         if (req.headers.accept.includes("text/html")) {
             res.render(`errors/${statusCode}`, { error: err });
-        }
-        else {
+        } else {
             res.json({ error: err });
         }
     };
