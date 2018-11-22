@@ -1,5 +1,6 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define('catalog',
+    return sequelize.define(
+        "catalog",
         // columns definition
         {
             id: {
@@ -19,17 +20,14 @@ module.exports = (sequelize, type) => {
             description: type.STRING,
             user_id: {
                 type: type.INTEGER,
-                references: {
-                    model: 'user',
-                    key: 'id'
-                }
+                references: { model: "user", key: "id" }
             }
         },
         // options
         {
-            tableName: 'catalogs',
+            tableName: "catalogs",
             timestamps: true,
             underscored: true
         }
-    )
-}
+    );
+};

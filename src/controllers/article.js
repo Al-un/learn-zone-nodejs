@@ -1,30 +1,20 @@
-const { AppController, Sequelize } = require('./app');
-const { Article } = require('../sequelize');
+const { AppController, Sequelize } = require("./app");
+const { Article, ArticlePublication } = require("../models/sequelize");
 
 class ArticleController extends AppController {
-
     constructor() {
-        super(Article, 'articles');
+        super(Article, "articles");
     }
 
     createParams(req, res) {
-        var params = req.body;
-        Object.assign(params, { user_id: res.locals.user_id })
-        return params;
-    }
-
-    updateParams(req, res) {
-        var params = req.body;
-        // [TMP-001] !!!!
-        Object.assign(params, { user_id: res.locals.user_id })
-        return params;
+        return this.mergeParamsWithUser(req.body, res);
     }
 
     formatSearchOptions(query_params) {
         var set = {};
 
         if (query_params.name) {
-            set['name'] = { [Sequelize.Op.like]: `%${query_params.name}%` };
+            set["name"] = { [Sequelize.Op.like]: `%${query_params.name}%` };
         }
 
         return set;

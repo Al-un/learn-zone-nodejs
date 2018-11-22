@@ -1,3 +1,3 @@
-module.exports = (someText) => {
+module.exports = someText => {
     return "Prefix" + someText;
-}
+};

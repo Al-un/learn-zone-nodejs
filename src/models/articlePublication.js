@@ -1,5 +1,6 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define('article_publication',
+    return sequelize.define(
+        "article_publication",
         // columns definition
         {
             id: {
@@ -9,24 +10,18 @@ module.exports = (sequelize, type) => {
             },
             article_id: {
                 type: type.INTEGER,
-                references: {
-                    model: 'article',
-                    key: 'id'
-                }
+                references: { model: "article", key: "id" }
             },
             catalog_id: {
                 type: type.INTEGER,
-                references: {
-                    model: 'catalog',
-                    key: 'id'
-                }
+                references: { model: "catalog", key: "id" }
             }
         },
         // options
         {
-            tableName: 'article_publications',
+            tableName: "article_publications",
             timestamps: true,
             underscored: true
         }
-    )
-}
+    );
+};
