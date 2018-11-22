@@ -1,50 +1,50 @@
 {
-  "name": "learnzone",
-  "version": "1.0.0",
-  "description": "Learning Zone NodeJS implementation",
-  "main": "index.js",
-  "scripts": {
-    "test": "nyc --reporter=lcov --reporter=text-lcov mocha --recursive",
-    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
-    "start_to_improve": "npm run build && node dist/index.js",
-    "dev": "nodemon ./index.js",
-    "scss": "./node_modules/.bin/node-sass --recursive ./private/scss --output ./public/style",
-    "start": "npm run scss && node index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Al-Un/learn-zone-nodejs.git"
-  },
-  "author": "Al-un",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Al-Un/learn-zone-nodejs/issues"
-  },
-  "homepage": "https://github.com/Al-Un/learn-zone-nodejs#readme",
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "dotenv": "^6.1.0",
-    "express": "^4.16.4",
-    "express-handlebars": "^3.0.0",
-    "express-jwt": "^5.3.1",
-    "express-jwt-authz": "^1.0.0",
-    "express-session": "^1.15.6",
-    "handlebars": "^4.0.12",
-    "jwks-rsa": "^1.3.0",
-    "method-override": "^3.0.0",
-    "node-sass": "^4.10.0",
-    "passport": "^0.4.0",
-    "passport-auth0": "^1.1.0",
-    "pg": "^7.6.1",
-    "pg-hstore": "^2.3.2",
-    "sequelize": "^4.41.1"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.6",
-    "nyc": "^13.1.0",
-    "rimraf": "^2.6.2"
-  }
+    "name": "learnzone",
+    "version": "1.0.0",
+    "description": "Learning Zone NodeJS implementation",
+    "main": "index.js",
+    "scripts": {
+        "test": "nyc --reporter=lcov --reporter=text-lcov mocha --recursive",
+        "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+        "start_to_improve": "npm run build && node dist/index.js",
+        "dev": "nodemon ./index.js",
+        "scss": "./node_modules/.bin/node-sass --recursive ./src/assets/scss --output ./public/style",
+        "start": "npm run scss && node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Al-Un/learn-zone-nodejs.git"
+    },
+    "author": "Al-un",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Al-Un/learn-zone-nodejs/issues"
+    },
+    "homepage": "https://github.com/Al-Un/learn-zone-nodejs#readme",
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "dotenv": "^6.1.0",
+        "express": "^4.16.4",
+        "express-handlebars": "^3.0.0",
+        "express-jwt": "^5.3.1",
+        "express-jwt-authz": "^1.0.0",
+        "express-session": "^1.15.6",
+        "handlebars": "^4.0.12",
+        "jwks-rsa": "^1.3.0",
+        "method-override": "^3.0.0",
+        "node-sass": "^4.10.0",
+        "passport": "^0.4.0",
+        "passport-auth0": "^1.1.0",
+        "pg": "^7.6.1",
+        "pg-hstore": "^2.3.2",
+        "sequelize": "^4.41.1"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "mocha": "^5.2.0",
+        "nodemon": "^1.18.6",
+        "nyc": "^13.1.0",
+        "rimraf": "^2.6.2"
+    }
 }
