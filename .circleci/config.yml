@@ -13,17 +13,17 @@ jobs:
       - checkout
 
       - restore_cache:
-        name: Restore NPM Package Cache
-        keys:
-          - learnzone-node-dependencies-{{ checksum "package-lock.json" }}
-          - learnzone-node-dependencies-
+          name: Restore NPM Package Cache
+          keys:
+            - learnzone-node-dependencies-{{ checksum "package-lock.json" }}
+            - learnzone-node-dependencies-
 
       - run:
-        name: Install Dependencies
-        command: npm install
+          name: Install Dependencies
+          command: npm install
 
       - save_cache:
-        name: Save NPM Package Cache
-        key: learnzone-node-dependencies-{{ checksum "package-lock.json" }}
-        paths:
-          - ./node_modules
+          name: Save NPM Package Cache
+          key: learnzone-node-dependencies-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
