@@ -1,0 +1,29 @@
+# [28-Nov-2018] switch to Yarn
+#               https://circleci.com/docs/2.0/yarn/
+
+# Using CircleCI 2
+version: 2
+
+jobs:
+  build:
+    docker:
+      # https://hub.docker.com/r/circleci/node/
+      - image: circleci/node:11-browsers-legacy
+      steps:
+        - checkout
+
+        - restore_cache:
+          name: Restore NPM Package Cache
+          keys:
+            - learnzone-node-dependencies-{{ checksum "package-lock.json" }}
+            - learnzone-node-dependencies-
+
+        - run:
+          name: Install Dependencies
+          command: npm install
+
+        - save_cache:
+          name: Save NPM Package Cache
+          key: learnzone-node-dependencies-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules

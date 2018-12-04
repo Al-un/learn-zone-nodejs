@@ -9,6 +9,8 @@ const path = require("path");
 const session = require("express-session");
 // Override method
 const methodOverride = require("method-override");
+// CORS
+const cors = require("cors");
 
 // Express
 const app = express();
@@ -17,6 +19,13 @@ const app = express();
 // https://www.npmjs.com/package/method-override
 // https://dev.to/moz5691/method-override-for-put-and-delete-in-html-3fp2
 app.use(methodOverride("_method"));
+
+// CORS handling:
+// https://expressjs.com/en/resources/middleware/cors.html
+const corsOptions = {
+    origin: "*"
+};
+app.use(cors(corsOptions));
 
 // https://stackoverflow.com/a/4296402/4906586
 /** bodyParser.urlencoded(options)

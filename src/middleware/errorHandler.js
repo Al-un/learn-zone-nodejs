@@ -1,6 +1,7 @@
 module.exports = function() {
     return function(err, req, res, next) {
-        console.log(`[Error] ${err}`);
+        console.log(`[Error] intercepted error:`);
+        console.log(err);
         var statusCode;
         // Auth0 error
         if (err.name === "UnauthorizedError") {
